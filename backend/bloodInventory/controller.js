@@ -21,15 +21,20 @@ export const createBloodInventory = async (req, res) => {
             req.user.id,
             { $push: { bloodInventory: newBloodInventory._id } }, // Add blood inventory reference to organization
             { new: true } // Return the updated organization document
-        );
+        ).populate('bloodInventory');
 
         if (!organization) {
             return res.status(404).json({ error: "Organization not found" });
         }
 
+        console.log(organization);
+        // console.log(organization.populate("bloodInventory"));
+        // const currOrg = organization.populate("bloodInventory")
+        // console.log(currOrg);
+
         return res.status(201).json({
             message: "Blood inventory added successfully!",
-            bloodInventory: updatedBloodInventory
+            bloodInventory: organization.bloodInventory,
         });
     } catch (error) {
         return res.status(500).json({ error: "Something went wrong!" });
@@ -131,7 +136,7 @@ export const deleteBloodInventory = async (req, res) => {
             req.user.id,
             { $pull: { bloodInventory: bloodInventoryID } }, // Remove blood inventory reference from organization
             { new: true }
-        );
+        ).populate('bloodInventory');
 
         if (!organization) {
             return res.status(404).json({ error: "Organization not found" });
@@ -141,7 +146,7 @@ export const deleteBloodInventory = async (req, res) => {
 
         return res.status(200).json({
             message: "Blood inventory deleted successfully",
-            bloodInventory: bloodInventory
+            bloodInventory: organization.bloodInventory
         });
     } catch (error) {
         return res.status(500).json({ error: "Something went wrong!" });

@@ -4,14 +4,20 @@ import { GlobalContext } from "../../Context/login/context";
 import { MdModeEdit } from "react-icons/md";
 import { MdDeleteForever } from "react-icons/md";
 import AddBlood from "../components/AddBlood";
+import toast, { Toaster } from "react-hot-toast";
+import UpdateBlood from "../components/UpdateBlood";
 
 const BloodInventory = () => {
   const { state } = useContext(GlobalContext);
   const [bloodInventory, setBloodInventory] = useState([]);
   const [loading, setLoading] = useState(true); // State for loading indicator
 
+  const notifySuccess = () => {
+    toast.success("Blood has been deleted successfully!");
+  }
+
   useEffect(() => {
-    setLoading(true); // Set loading to true when data fetch begins
+    setLoading(true); 
 
     axios
       .get("http://localhost:8000/api/get-all-bloodinventory", {
@@ -21,13 +27,13 @@ const BloodInventory = () => {
       })
       .then((res) => {
         setBloodInventory(res.data.bloodInventory);
-        setLoading(false); // Set loading to false after data is fetched
+        setLoading(false); 
       })
       .catch((err) => {
         console.log(err.message);
-        setLoading(false); // Set loading to false in case of an error
+        setLoading(false); 
       });
-  }, [state.token]); // Ensure to reload data if token changes
+  }, [state.token]); 
 
   const updateBloodInventory = (bloodInventoryID) => {
     console.log(bloodInventoryID);
@@ -47,13 +53,14 @@ const BloodInventory = () => {
       )
       .then((res) => {
         setBloodInventory(res.data.bloodInventory);
-        alert("Blood Inventory Deleted Successfully");
+        notifySuccess();
       })
       .catch((err) => console.log(err.message));
   };
 
   return (
     <>
+     <Toaster position="top-center" reverseOrder={false} />
       <div className="p-3">
         <div className="flex justify-between items-center">
           <h2 className="text-black text-lg font-bold">Blood Inventory</h2>
@@ -70,6 +77,7 @@ const BloodInventory = () => {
             </div>
           </div>
         ) : (
+          <div className="overflow-x-auto shadow-lg rounded-lg">
           <table className="table-auto border-collapse border border-gray-400 w-full shadow-lg rounded-lg overflow-hidden">
             {/* Table Header */}
             <thead className="bg-red-500 text-black text-lg text-center">
@@ -99,12 +107,13 @@ const BloodInventory = () => {
                     {new Date(binventory.updatedAt).toLocaleDateString()}
                   </td>
                   <td className="border border-gray-300 p-2 flex justify-center gap-3">
-                    <button
+                    {/* <button
                       className="p-2 bg-green-500 text-white rounded-md shadow-md hover:bg-green-600 transition"
-                      onClick={() => updateBloodInventory(binventory._id)}
+                      // onClick={() => updateBloodInventory(binventory._id)}
                     >
-                      <MdModeEdit size={20} />
-                    </button>
+                      <UpdateBlood size={20} bID={binventory._id}/>
+                    </button> */}
+                    <UpdateBlood size={20} bID={binventory._id}/>
                     <button
                       className="p-2 bg-red text-white rounded-md shadow-md hover:bg-red-600 transition"
                       onClick={() => deleteBloodInventory(binventory._id)}
@@ -116,6 +125,7 @@ const BloodInventory = () => {
               ))}
             </tbody>
           </table>
+          </div>
         )}
       </div>
     </>

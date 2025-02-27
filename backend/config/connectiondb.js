@@ -7,6 +7,7 @@ const connectMongo = async(URL, dbName) => {
         dbName: dbName 
     })
        console.log("Connected Successfully to atlas");
+       import("../cronJobs.js");
     } catch (error) {
         console.log(error);
     }

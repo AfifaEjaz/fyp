@@ -4,9 +4,10 @@ import { GlobalContext } from "../../Context/login/context";
 import { decodeToken } from "react-jwt";
 import Form from "react-bootstrap/Form";
 import axios from "axios";
+import { MdModeEdit } from "react-icons/md";
 import toast, { Toaster } from "react-hot-toast";
 
-const AddBlood = ({ setBloodInventory }) => {
+const UpdateBlood = ({ setBloodInventory,  bID }) => {
   const { state } = useContext(GlobalContext);
 
   const [bloodType, setBloodType] = useState("");
@@ -20,6 +21,7 @@ const AddBlood = ({ setBloodInventory }) => {
 
   const res = decodeToken(state.token);
 
+  console.log(bID);
   const notifySuccess = () => {
     toast.success("Blood has been Added successfully!");
   };
@@ -41,47 +43,49 @@ const AddBlood = ({ setBloodInventory }) => {
       quantity: Number(bloodQuantity), // Convert to number
     };
 
+    console.log(payload);
+
     setError(null); // Reset error state
 
-    try {
-      const response = await axios.post(
-        "http://localhost:8000/api/create-bloodinventory",
-        payload,
-        {
-          headers: {
-            Authorization: `Bearer ${state.token}`,
-          },
-        }
-      );
-      console.log(response.data.bloodInventory);
+    // try {
+    //   const response = await axios.post(
+    //     "http://localhost:8000/api/create-bloodinventory",
+    //     payload,
+    //     {
+    //       headers: {
+    //         Authorization: `Bearer ${state.token}`,
+    //       },
+    //     }
+    //   );
+    //   console.log(response.data.bloodInventory);
 
-      setBloodInventory(response.data.bloodInventory);
+    //   setBloodInventory(response.data.bloodInventory);
 
-      notifySuccess();
-      setTimeout(() => {
-        handleClose();
-      }, 2000); // Ensuring the loading state is at least 3 seconds before error
+    //   notifySuccess();
+    //   setTimeout(() => {
+    //     handleClose();
+    //   }, 2000); // Ensuring the loading state is at least 3 seconds before error
 
-      setBloodQuantity("");
-      setBloodType(""); // Reset blood type after successful submission
-    } catch (err) {
-      console.error(err);
-      setError("Failed to add blood. Please try again.");
-    }
+    //   setBloodQuantity("");
+    //   setBloodType(""); // Reset blood type after successful submission
+    // } catch (err) {
+    //   console.error(err);
+    //   setError("Failed to add blood. Please try again.");
+    // }
   };
 
   return (
     <>
       <button
-        className="bg-red text-white cursor-pointer p-2 mb-2 rounded"
+        className="p-2 bg-green-500 text-white rounded-md shadow-md hover:bg-green-600 transition"
         onClick={handleShow}
       >
-        Add Blood
+        <MdModeEdit size={20} />
       </button>
 
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Add Blood</Modal.Title>
+          <Modal.Title>Update Blood</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Toaster position="top-center" reverseOrder={false} />
@@ -127,7 +131,7 @@ const AddBlood = ({ setBloodInventory }) => {
                 type="submit"
                 className="bg-red text-white cursor-pointer p-2 rounded"
               >
-                Add Blood
+                Update
               </button>
             </div>
           </form>
@@ -137,4 +141,4 @@ const AddBlood = ({ setBloodInventory }) => {
   );
 };
 
-export default AddBlood;
+export default UpdateBlood;

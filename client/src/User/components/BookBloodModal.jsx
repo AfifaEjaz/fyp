@@ -4,6 +4,7 @@ import { GlobalContext } from "../../Context/login/context";
 import { decodeToken } from "react-jwt";
 import Form from "react-bootstrap/Form";
 import axios from "axios";
+import toast, { Toaster } from "react-hot-toast";
 
 const BookBloodModal = ({ bloodInventory, organizationID }) => {
   const { state } = useContext(GlobalContext);
@@ -20,6 +21,10 @@ const BookBloodModal = ({ bloodInventory, organizationID }) => {
   const userID = res?.userID;
   const username = res?.name;
   const useremail = res?.email;
+
+  const notifySuccess = () => {
+    toast.success("Booking has been done successfully!");
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -48,11 +53,18 @@ const BookBloodModal = ({ bloodInventory, organizationID }) => {
         }
       );
       console.log(response.data);
-      alert("Booking has been made successfully!")
-      handleClose();
+
+      notifySuccess();
+      setTimeout(() => {
+        handleClose();
+      }, 2000); // Ensuring the loading state is at least 3 seconds before error
+
       setBloodQuantity(""); // Clear input
     } catch (err) {
-      console.error("Booking Error:", err.response?.data?.message || err.message);
+      console.error(
+        "Booking Error:",
+        err.response?.data?.message || err.message
+      );
     }
   };
 
@@ -70,6 +82,7 @@ const BookBloodModal = ({ bloodInventory, organizationID }) => {
           <Modal.Title>Get Blood</Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          <Toaster position="top-center" reverseOrder={false} />
           <p>Your Booking will get expire after one hour</p>
           <form onSubmit={handleSubmit} className="p-3">
             <Form.Select

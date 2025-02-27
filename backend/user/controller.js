@@ -142,6 +142,23 @@ export async function getAllOrganization(req, res) {
     }
 }
 
+export async function getAllUsers(req, res) {
+    console.log("chala");
+    try {
+        const result = await user.find({ role: "user" })
+            .populate('location') // Populate the location field
+            .populate('bloodInventory'); // Populate the bloodInventory field
+        console.log("users fetched");
+        res.status(200).json({  // Updated to 200 OK
+            message: "Users fetched successfully",
+            result
+        });
+    } catch (error) {
+        console.error("Error fetching users:", error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+}
+
 export async function resetPasswordEmail(req, res) {
     const { email } = req.body
     console.log("chl rha hai");

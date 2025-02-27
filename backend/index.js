@@ -8,6 +8,7 @@ import location from './locations/router.js';
 import bloodInventory from './bloodInventory/router.js';
 import booking from './booking/router.js';
 import connectMongo from './config/connectiondb.js';
+// import "./cronJobs.js"; 
 import { fileURLToPath } from 'url';
 import path from 'path'
 

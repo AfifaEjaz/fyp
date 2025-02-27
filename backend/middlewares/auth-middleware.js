@@ -18,8 +18,9 @@ var checkUserAuth = async(req, res, next) => {
             req.user = await user.findById(userID)
             .select("-password")
             .populate('location') // Populate location field
-            .populate('bloodInventory'); // Populate bloodInventory field
-            console.log(req.user);
+            .populate('bloodInventory') // Populate bloodInventory field
+            .populate('booking'); // Populate bloodInventory field
+            console.log("user: ",req.user);
             next()
         } catch (error) {
             console.error(error);
